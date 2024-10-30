@@ -10,9 +10,11 @@ import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.repository.CompilationRepository;
+import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ObjectNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,16 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        Compilation compilation = CompilationMapper.fromNewDto(newCompilationDto);
+        List<Event> events = new ArrayList<>();
+
+        if (newCompilationDto.getEvents() != null) {
+            events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
+        }
+
+        Compilation compilation = new Compilation();
+        compilation.setPinned(newCompilationDto.getPinned());
+        compilation.setTitle(newCompilationDto.getTitle());
+        compilation.setEvents(events);
 
         compilationRepository.save(compilation);
 
