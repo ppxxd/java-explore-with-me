@@ -27,16 +27,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        List<Event> events = new ArrayList<>();
-
-        if (newCompilationDto.getEvents() != null) {
-            events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
-        }
-
-        Compilation compilation = new Compilation();
-        compilation.setPinned(newCompilationDto.getPinned());
-        compilation.setTitle(newCompilationDto.getTitle());
-        compilation.setEvents(events);
+        Compilation compilation = CompilationMapper.fromNewDto(newCompilationDto);
 
         compilationRepository.save(compilation);
 

@@ -347,7 +347,7 @@ public class EventServiceImpl implements EventService {
         List<Long> eventIds = events
                 .stream()
                 .map(Event::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         List<ViewStatsDto> viewStatsList = statsClient
                 .getStats(LocalDateTime.now().minusYears(5),

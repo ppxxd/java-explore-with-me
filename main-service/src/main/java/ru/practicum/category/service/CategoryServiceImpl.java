@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryRepository.save(CategoryMapper.fromDto(newCategoryDto));
         log.info("CATEGORY SAVED: {}", category);
-        return CategoryMapper.toDto(category); //TODO CHECK ID
+        return CategoryMapper.toDto(category);
     }
 
     @Override

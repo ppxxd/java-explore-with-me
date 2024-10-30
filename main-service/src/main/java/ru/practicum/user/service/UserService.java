@@ -5,7 +5,6 @@ import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 

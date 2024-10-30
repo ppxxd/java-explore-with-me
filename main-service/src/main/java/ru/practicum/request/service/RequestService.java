@@ -15,7 +15,7 @@ public interface RequestService {
 
     RequestDto updateRequestById(Long userId, Long requestId);
 
-    public Request checkRequestExistsById(Long requestId);
+    Request checkRequestExistsById(Long requestId);
 
     List<RequestDto> getRequestsEventByUser(Long userId, Long eventId);
 

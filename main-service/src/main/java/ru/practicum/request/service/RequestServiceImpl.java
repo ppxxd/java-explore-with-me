@@ -122,14 +122,11 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Events not found");
         }
 
-        switch (updateRequest.getStatus()) {
-            case CONFIRMED:
-                return updateConfirmedStatus(requestList, event);
-            case REJECTED:
-                return updateRejectedStatus(requestList);
-            default:
-                throw new ValidationException("Incorrect status");
-        }
+        return switch (updateRequest.getStatus()) {
+            case CONFIRMED -> updateConfirmedStatus(requestList, event);
+            case REJECTED -> updateRejectedStatus(requestList);
+            default -> throw new ValidationException("Incorrect status");
+        };
     }
 
     @Override
