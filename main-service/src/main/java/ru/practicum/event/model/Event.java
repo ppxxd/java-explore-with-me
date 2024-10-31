@@ -1,21 +1,19 @@
 package ru.practicum.event.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
 import ru.practicum.location.model.Location;
 
 import java.time.LocalDateTime;
 
-@Data
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "events")
 public class Event {
     @Id
@@ -81,5 +79,4 @@ public class Event {
         SEND_TO_REVIEW,
         CANCEL_REVIEW
     }
-
 }

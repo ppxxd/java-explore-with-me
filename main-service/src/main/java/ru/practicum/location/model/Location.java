@@ -1,16 +1,14 @@
 package ru.practicum.location.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@Data
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "locations")
 public class Location {
     @Id
