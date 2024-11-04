@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.client.StatsClient;
-import ru.practicum.comment.service.CommentService;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.enums.Sort;
@@ -49,7 +49,6 @@ public class EventServiceImpl implements EventService {
     private final CategoryService categoryService;
     private final LocationRepository locationRepository;
     private final StatsClient statsClient;
-    private final CommentService commentService;
     private static final LocalDateTime CURRENT_TIME = LocalDateTime.now();
 
     @Override
@@ -206,7 +205,6 @@ public class EventServiceImpl implements EventService {
         event.setViews(hits + 1);
         event.setConfirmedRequests((long) requestRepository.findAllByEventIdInAndStatus(List.of(eventId),
                 Request.RequestStatus.CONFIRMED).size());
-        event.setComments(commentService.getCommentsCount(eventId));
         return EventMapper.toDto(eventRepository.save(event));
     }
 

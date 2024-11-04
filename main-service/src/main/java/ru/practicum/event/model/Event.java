@@ -67,8 +67,6 @@ public class Event {
 
     private Long views;
 
-    private Long comments; //Comments amount
-
     public enum State {
         PENDING,
         PUBLISHED,

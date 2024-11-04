@@ -1,6 +1,7 @@
 package ru.practicum.comment.mapper;
 
 import ru.practicum.comment.dto.CommentDto;
+import ru.practicum.comment.dto.NewCommentDto;
 import ru.practicum.comment.model.Comment;
 import ru.practicum.event.service.EventService;
 import ru.practicum.user.service.UserService;
@@ -16,6 +17,16 @@ public class CommentMapper {
                 .event(eventService.checkEventExistsById(dto.getEvent()))
                 .text(dto.getText())
                 .createdOn(dto.getCreatedOn())
+                .build();
+    }
+
+    public static Comment fromNewDto(NewCommentDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return Comment.builder()
+                .text(dto.getText())
                 .build();
     }
 

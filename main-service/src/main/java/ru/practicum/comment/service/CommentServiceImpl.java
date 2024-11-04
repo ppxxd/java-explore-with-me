@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import ru.practicum.comment.dto.CommentDto;
+import ru.practicum.comment.dto.NewCommentDto;
 import ru.practicum.comment.mapper.CommentMapper;
 import ru.practicum.comment.model.Comment;
 import ru.practicum.comment.repository.CommentRepository;
@@ -20,6 +20,7 @@ import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,17 +38,19 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDto createComment(Long userId, Long eventId, CommentDto commentDto) {
+    public CommentDto createComment(Long userId, Long eventId, NewCommentDto newCommentDto) {
         User user = userService.checkUserExistsById(userId);
         Event event = eventService.checkEventExistsById(eventId);
 
         checkCommentConditions(event, user);
 
-        Comment comment = CommentMapper.fromDto(commentDto, userService, eventService);
+        Comment comment = CommentMapper.fromNewDto(newCommentDto);
+        comment.setCreatedOn(LocalDateTime.now());
+        comment.setAuthor(user);
+        comment.setEvent(event);
         return CommentMapper.toDto(commentRepository.save(comment));
     }
 
-    @Transactional
     @Override
     public void deleteCommentById(Long commentId, Long userId) {
         Comment comment = checkCommentExistById(commentId);
@@ -57,7 +60,6 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    @Transactional
     @Override
     public void deleteComment(Long commentId) {
         checkCommentExistById(commentId);
@@ -66,18 +68,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDto updateCommentById(Long commentId, Long userId, CommentDto commentDto) {
+    public CommentDto updateCommentById(Long commentId, Long userId, NewCommentDto newCommentDto) {
         Comment foundComment = checkCommentExistById(commentId);
 
         checkUserIsAuthorComment(foundComment.getAuthor().getId(), userId, commentId);
 
-        String newText = commentDto.getText();
-        if (StringUtils.hasLength(newText)) {
-            foundComment.setText(newText);
-        }
+        foundComment.setText(newCommentDto.getText());
 
-        Comment savedComment = commentRepository.save(foundComment);
-        return CommentMapper.toDto(savedComment);
+        return CommentMapper.toDto(commentRepository.save(foundComment));
     }
 
     @Override
@@ -97,16 +95,7 @@ public class CommentServiceImpl implements CommentService {
         );
     }
 
-    @Override
-    public Long getCommentsCount(Long eventId) {
-        return commentRepository.countAllByEventId(eventId);
-    }
-
     private void checkCommentConditions(Event event, User user) {
-        if (event.getState() != Event.State.PUBLISHED) {
-            throw new ConflictException("Event should be published to post comments!");
-        }
-
         if (!Objects.equals(event.getInitiator().getId(), user.getId())) {
             Request result = requestRepository.findByRequesterIdAndEventId(user.getId(), event.getId())
                     .orElseThrow(() -> new ValidationException(String.format("User %d does not participate in event %d!",

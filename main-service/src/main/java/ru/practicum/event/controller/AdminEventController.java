@@ -46,9 +46,10 @@ public class AdminEventController {
         return eventService.updateEventByAdmin(eventId, request);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{eventId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long commentId) {
+        log.info("Call admin deleteComment endpoint.");
         commentService.deleteComment(commentId);
     }
 }

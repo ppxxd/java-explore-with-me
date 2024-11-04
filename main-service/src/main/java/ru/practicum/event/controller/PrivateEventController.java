@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentDto;
+import ru.practicum.comment.dto.NewCommentDto;
 import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.NewEventDto;
@@ -79,12 +80,12 @@ public class PrivateEventController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto createComment(@PathVariable Long userId,
                                     @PathVariable Long eventId,
-                                    @Valid @RequestBody CommentDto commentDto) {
+                                    @Valid @RequestBody NewCommentDto newCommentDto) {
         log.info("Call private createComment endpoint.");
-        return commentService.createComment(userId, eventId, commentDto);
+        return commentService.createComment(userId, eventId, newCommentDto);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{eventId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long userId,
                               @PathVariable Long commentId) {
@@ -92,11 +93,11 @@ public class PrivateEventController {
         commentService.deleteCommentById(commentId, userId);
     }
 
-    @PatchMapping("/comments/{commentId}")
+    @PatchMapping("/{eventId}/comments/{commentId}")
     public CommentDto updateComment(@PathVariable Long userId,
                                     @PathVariable Long commentId,
-                                    @Valid @RequestBody CommentDto commentDto) {
+                                    @Valid @RequestBody NewCommentDto newCommentDto) {
         log.info("Call private updateComment endpoint.");
-        return commentService.updateCommentById(commentId, userId, commentDto);
+        return commentService.updateCommentById(commentId, userId, newCommentDto);
     }
 }
