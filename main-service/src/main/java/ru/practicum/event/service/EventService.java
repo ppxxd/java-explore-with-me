@@ -17,7 +17,7 @@ public interface EventService {
 
     EventFullDto getEventByUser(Long userId, Long eventId);
 
-    Event checkEventExistsById(Long catId);
+    Event checkEventExistsById(Long eventId);
 
     EventFullDto updateEventByUser(Long userId,
                                    Long eventId,
