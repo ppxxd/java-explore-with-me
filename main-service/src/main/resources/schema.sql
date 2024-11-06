@@ -77,3 +77,7 @@ create table if not exists comments (
     constraint fk_event_comment foreign key (event_id) references events (id) on delete cascade,
     constraint fk_user_comment foreign key (author_id) references users (id) on delete cascade
 );
+
+create index idx_comments_text on comments(comment_text);
+create index idx_comments_event_id on comments(event_id);
+create index idx_comments_author_id on comments(author_id);

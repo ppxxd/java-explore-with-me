@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteCommentById(Long commentId, Long userId) {
-        Comment comment = checkCommentExistById(commentId);
+        Comment comment = CommentMapper.fromDto(checkCommentExistById(commentId), userService, eventService);
 
         checkUserIsAuthorComment(comment.getAuthor().getId(), userId, commentId);
 
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto updateCommentById(Long commentId, Long userId, NewCommentDto newCommentDto) {
-        Comment foundComment = checkCommentExistById(commentId);
+        Comment foundComment = CommentMapper.fromDto(checkCommentExistById(commentId), userService, eventService);
 
         checkUserIsAuthorComment(foundComment.getAuthor().getId(), userId, commentId);
 
@@ -89,9 +89,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment checkCommentExistById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(
-                () -> new ObjectNotFoundException(String.format("Comment %d not found", commentId))
+    public CommentDto checkCommentExistById(Long commentId) {
+        return CommentMapper.toDto(commentRepository.findById(commentId).orElseThrow(
+                () -> new ObjectNotFoundException(String.format("Comment %d not found", commentId)))
         );
     }
 
